@@ -5,14 +5,18 @@ class Viaje{
     private $cantMaxima;
     private $pasajeros;
     private $responsable;
+    private $costo;
+    private $sumaCostos;
 
     // Metodo Constructor de la clase Viaje
-    public function __construct($cod,$dest,$cantidadMax,$pasaj,$respons){
+    public function __construct($cod,$dest,$cantidadMax,$colPasajeros,$respons,$importe,$sumaImportes){
         $this->codigo = $cod;
         $this->destino = $dest;
         $this->cantMaxima = $cantidadMax;
-        $this->pasajeros = $pasaj;
+        $this->pasajeros = $colPasajeros;
         $this->responsable = $respons;
+        $this->costo = $importe;
+        $this->sumaCostos = $sumaImportes;
     }
 
     // Metodos GET de la clase Viaje
@@ -31,6 +35,12 @@ class Viaje{
     public function getResponsable(){
         return $this->responsable;
     }
+    public function getCosto(){
+        return $this->costo;
+    }
+    public function getSumaCostos(){
+        return $this->sumaCostos;
+    }
 
     // Metodos SET de la clase Viaje
     public function setCodigo($cod){
@@ -48,6 +58,12 @@ class Viaje{
     public function setResponsable($responsable){
         $this->responsable = $responsable;
     }
+    public function setCosto($costo){
+        $this->costo = $costo;
+    }
+    public function setSumaCostos($sumaCostos){
+        $this->sumaCostos = $sumaCostos;
+    }
 
     // Metodos que muestran la informacion de la clase viaje
     public function __toString(){
@@ -55,11 +71,11 @@ class Viaje{
                "-------------" . "\n" . 
                " Codigo: " . $this->getCodigo() . "\n" .
                " Destino: " . $this->getDestino() . "\n" .
-               " Cant. Maxima de Pasajeros: " . $this->getCantidad_maxima() . "\n" . "\n" .
-               " Pasajeros " . "\n" .
-                 $this->mostrarDatos_pasajeros() . "\n" .
-               " Responsable" . "\n" .
-                 $this->getResponsable() . "\n";
+               " Cant. Maxima de Pasajeros: " . $this->getCantidad_maxima() . "\n" .
+               " Costo: " . $this->getCosto() . "\n" .
+               " Suma Costos: " . $this->getSumaCostos() . "\n" . "\n" .
+               " Pasajeros " . "\n" . $this->mostrarDatos_pasajeros() . "\n" .
+               " Responsable " . "\n" . $this->getResponsable() . "\n";          
     }
 
     public function mostrarDatos_pasajeros(){
@@ -109,9 +125,58 @@ class Viaje{
         return $pasajCargado;
     }
 
-    public function modificaViaje($codigo,$destino,$cantidadMaxima){
+    public function modificaViaje($codigo,$destino,$cantidadMaxima,$costo){
         $this->setCodigo($codigo);
         $this->setDestino($destino);
         $this->setCantidad_maxima($cantidadMaxima);
+        $this->setCosto($costo);
+    }
+
+    public function venderPasaje($objPasajero){
+        $colPasajeros = $this->getPasajeros();
+        echo $this->cantPasajeros() . "\n";
+        if($this->cantPasajeros() == 0){
+            $colPasajeros [] = $objPasajero;
+            $this->setPasajeros($colPasajeros);
+            $costo = $this->getCosto();
+            echo $costo . "\n";
+            $porcentaje = $objPasajero->darPorcentajeIncremento();
+            $costoFinal = $costo + ($costo * $porcentaje) / 100;
+            echo $costoFinal . "\n";
+            $this->setSumaCostos($this->getSumaCostos() + $costoFinal);
+            echo $this->getSumaCostos() . "\n";
+        }else{
+            $pasajeDisponible = $this->hayPasajesDisponible();
+            $pasajeroCargado = $this->pasajeroYaCargado($objPasajero->getDni());
+            if($pasajeDisponible){
+                if(!$pasajeroCargado){
+                    $colPasajeros [] = $objPasajero;
+                    $this->setPasajeros($colPasajeros);
+                    $costo = $this->getCosto();
+                    echo $costo . "\n";
+                    $porcentaje = $objPasajero->darPorcentajeIncremento();
+                    $costoFinal = $costo + ($costo * $porcentaje) / 100;
+                    echo $costoFinal . "\n";
+                    $this->setSumaCostos($this->getSumaCostos() + $costoFinal);
+                    echo $this->getSumaCostos() . "\n";
+                }else{
+                    $costoFinal = -1;
+                }
+            }else{
+                $costoFinal = 0;
+            }
+        }
+        echo $costoFinal . "\n";
+        return $costoFinal;
+    }
+
+    public function hayPasajesDisponible(){
+        $cantPasajeros = $this->cantPasajeros();
+        if($cantPasajeros < $this->getCantidad_maxima()){
+            $hayPasaje = true;
+        }else{
+            $hayPasaje = false; 
+        }
+        return $hayPasaje;
     }
 }

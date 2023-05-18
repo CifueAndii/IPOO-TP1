@@ -45,7 +45,7 @@ class ResponsableV{
                "  Apellido: " . $this->getApellido() . "\n"; 
     }
 
-    public function modificaInfo_Responsable($numEmpleado,$nombre,$apellido){
+    public function modificaInfoResponsable($numEmpleado,$nombre,$apellido){
         $this->setNumEmpleado($numEmpleado);
         $this->setNombre($nombre);
         $this->setApellido($apellido);
