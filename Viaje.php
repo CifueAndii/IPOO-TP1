@@ -134,17 +134,13 @@ class Viaje{
 
     public function venderPasaje($objPasajero){
         $colPasajeros = $this->getPasajeros();
-        echo $this->cantPasajeros() . "\n";
         if($this->cantPasajeros() == 0){
             $colPasajeros [] = $objPasajero;
             $this->setPasajeros($colPasajeros);
             $costo = $this->getCosto();
-            echo $costo . "\n";
             $porcentaje = $objPasajero->darPorcentajeIncremento();
             $costoFinal = $costo + ($costo * $porcentaje) / 100;
-            echo $costoFinal . "\n";
             $this->setSumaCostos($this->getSumaCostos() + $costoFinal);
-            echo $this->getSumaCostos() . "\n";
         }else{
             $pasajeDisponible = $this->hayPasajesDisponible();
             $pasajeroCargado = $this->pasajeroYaCargado($objPasajero->getDni());
@@ -153,12 +149,9 @@ class Viaje{
                     $colPasajeros [] = $objPasajero;
                     $this->setPasajeros($colPasajeros);
                     $costo = $this->getCosto();
-                    echo $costo . "\n";
                     $porcentaje = $objPasajero->darPorcentajeIncremento();
                     $costoFinal = $costo + ($costo * $porcentaje) / 100;
-                    echo $costoFinal . "\n";
                     $this->setSumaCostos($this->getSumaCostos() + $costoFinal);
-                    echo $this->getSumaCostos() . "\n";
                 }else{
                     $costoFinal = -1;
                 }
@@ -166,7 +159,6 @@ class Viaje{
                 $costoFinal = 0;
             }
         }
-        echo $costoFinal . "\n";
         return $costoFinal;
     }
 
